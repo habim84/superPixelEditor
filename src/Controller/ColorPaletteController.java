@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ColorPaletteController {
+  private final String configFile = "resources/config";
+  private String recentSaveFileDir = null;
+	
   public static void saveColorPalette(ColorPicker colorPicker) {
     final FileChooser fileChooser = new FileChooser();
     final Stage saveFileStage = new Stage();
@@ -22,7 +25,7 @@ public class ColorPaletteController {
 
     PrintWriter pw = null;
     try {
-//      pw = new PrintWriter(new File("resources/custom_palette"));
+//    pw = new PrintWriter(new File("resources/custom_palette"));
       pw = new PrintWriter(fileChooser.showSaveDialog(saveFileStage));
       for (Color color: customColors)
         pw.println(String.valueOf(color.getRed()) + " " +
@@ -30,9 +33,9 @@ public class ColorPaletteController {
             String.valueOf(color.getBlue()) + " " +
             String.valueOf(color.getOpacity()));
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+    	e.printStackTrace();
     } finally {
-      pw.close();
+    	pw.close();
     }
   }
 
@@ -60,5 +63,38 @@ public class ColorPaletteController {
     } finally {
       scanner.close();
     }
+  }
+  
+  private void SAVE_TO_CONFIG(String saveDir) {
+    try {
+	  BufferedWriter bw = new BufferedWriter(this.configFile);
+	  FileWriter fw = new FileWriter(bw);
+	  
+	  fw.write(saveDir);
+	  
+    } catch(IOexception e) {
+    	e.printStackTrace();
+    } finally {
+    	try {
+    		if(bw != null) {
+      		bw.close();
+      	}
+      	if(fw != null) {
+      		fw.close();
+      	}
+    	} catch(IOexception ex) {
+    		ex.printStackTrace()
+    	}
+    }
+  }
+  
+  // Setters
+  public void SET_RECENT_SAVED_DIR(String sd) {
+  	this.recentSaveFileDir = sd;
+  }
+  
+  // Getters
+  public String GET_RECENT_SAVED_DIR(String sd) {
+  	return this.recentSaveFileDir;
   }
 }
